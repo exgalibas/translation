@@ -17,13 +17,13 @@ const (
 )
 
 // SaveLg 将语言保存到context中
-func SaveLg(ctx context.Context, lg string) context.Context {
-	return context.WithValue(ctx, LanguageKey, language.Make(lg))
+func SaveLg(ctx context.Context, lg language.Tag) context.Context {
+	return context.WithValue(ctx, LanguageKey, lg)
 }
 
 // SaveGinLg 将语言保存到gin的context中
-func SaveGinLg(ctx *gin.Context, lg string) {
-	ctx.Set(LanguageKey, language.Make(lg))
+func SaveGinLg(ctx *gin.Context, lg language.Tag) {
+	ctx.Set(LanguageKey, lg)
 }
 
 // GetLg 获取上下文语言

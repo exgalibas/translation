@@ -8,11 +8,9 @@ package lang
 
 import (
 	"context"
-	"golang.org/x/text/language"
 )
 
 type Translator interface {
 	Translate(context.Context, ...string) ([]string, error)
 	TranslateOne(context.Context, string) (string, error)
-	Filter(tags ...language.Tag) Translator
 }

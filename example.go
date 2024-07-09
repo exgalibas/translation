@@ -8,43 +8,46 @@ package lang
 
 import (
 	"context"
-	"fmt"
 	"golang.org/x/text/language"
 )
 
 // BaseUse 基础用法
 func BaseUse(ctx context.Context) {
+
+	// 设置/获取 ctx中的目标语言
+	ctx = SaveLg(ctx, language.English)
+	// 获取ctx中的目标语言
+	_ = GetLg(ctx)
+	// 获取gin ctx中的目标语言
+	_ = GetLgWithDefault(ctx, language.English)
+
 	// 初始化翻译器和解析器
 	// 默认使用i18n作为翻译器，对应的译本path:conf/locales/*.json
+	// 使用者如需定制可自行重写，也可直接使用默认
 	MustInit()
 
 	// 使用翻译器进行翻译，支持多个，会返回最后一个翻译错误
 	// 对于多个翻译，若某个翻译出错会返回原文本，不会阻断其他翻译，对应错误会返回
-	ret1, err1 := I18nTranslator.Translate(ctx, "翻译1", "翻译2")
-	fmt.Println(ret1, err1)
-
+	_, _ = I18nTranslator.Translate(ctx, "翻译1", "翻译2")
 	// 使用翻译器进行单个翻译，出错返回err
-	ret2, err2 := I18nTranslator.TranslateOne(ctx, "翻译1")
-	fmt.Println(ret2, err2)
+	_, _ = I18nTranslator.TranslateOne(ctx, "翻译1")
 
 	// 过滤某些语言不进行翻译
-	I18nTranslator.Filter(language.Chinese, language.French).Translate(ctx, "翻译1", "翻译2")
-	I18nTranslator.Filter(language.Chinese, language.French).TranslateOne(ctx, "翻译1")
+	_, _ = I18nTranslator.Filter(language.Chinese, language.French).Translate(ctx, "翻译1", "翻译2")
+	_, _ = I18nTranslator.Filter(language.Chinese, language.French).TranslateOne(ctx, "翻译1")
 
 	// 该方法包装了I18nTranslator的方法，增加了中文过滤，如果context中解出来是language.chinese，则不会进行翻译
 	// 同时也过滤了错误，无法翻译/翻译出错的返回原文本
-	ret3 := Translate(ctx, "翻译1", "翻译2")
-	fmt.Println(ret3)
+	_ = Translate(ctx, "翻译1", "翻译2")
 	// 对应的单个翻译
-	ret4 := TranslateOne(ctx, "翻译1")
-	fmt.Println(ret4)
+	_ = TranslateOne(ctx, "翻译1")
 
 	// 使用analyze进行翻译
 	// I18nAnalyzer组合了翻译器I18nTranslator和默认的结构体解析器DefaultTag，可以适用全场景
 	// 下面的方法等同于I18nTranslator.Translate
-	I18nAnalyzer.Translate(ctx, "翻译1", "翻译2")
+	_, _ = I18nAnalyzer.Translate(ctx, "翻译1", "翻译2")
 	// 下面的方法等同于I18nTranslator.TranslateOne
-	I18nAnalyzer.TranslateOne(ctx, "翻译1")
+	_, _ = I18nAnalyzer.TranslateOne(ctx, "翻译1")
 
 	// 更多的使用场景
 	// 1. 简单字符串
@@ -84,7 +87,8 @@ func BaseUse(ctx context.Context) {
 	analyzer := NewAnalyzer(I18nTranslator, &DefaultTag{}, WithLevel(1))
 	analyzer.Analyze(ctx, []string{"翻译1"})     //会进行翻译
 	analyzer.Analyze(ctx, [][]string{{"翻译1"}}) //不会进行翻译，因为这里有两层深度
-	// 参与层级叠加的有嵌套的array,slice，map和struct，当前项目默认初始化的时候设定层级为20，满足目前所有场景
+	// 参与层级叠加的有: 嵌套的array,slice，map和struct
+	// 当前项目默认初始化的时候设定层级为20，可以自定义
 
 	// template模板说明
 	// template模式下，会进行正则匹配，对应的正则表达式 - [^\s\p{Han}\p{P}\p{S}]+
@@ -92,7 +96,7 @@ func BaseUse(ctx context.Context) {
 	// 匹配成功后，在根据序号替换回来，比如译本中的某个模板如下：
 	// "仅计算@$/@$回传的_@$事件数据": "Only calculate _@3$ event from @1$/@2$",
 	// 其中value中的@1$/@2$/@3$对应key中从左到右的三个@$，即你可以人为调整翻译后的回写顺序
-	// 那么如果要翻译"仅计算SDK/APP回传的_event事件数据"，就可以使用template模式进行翻译
+	// 如果要翻译"仅计算SDK/APP回传的_event事件数据"，就可以使用上述的template进行模版翻译
 
 	// 高级主题
 	// 当前的Analyzer默认使用i18n作为翻译器，DefaultTag作为结构体解析器
