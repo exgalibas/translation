@@ -8,17 +8,20 @@ package lang
 
 import (
 	"context"
+	"github.com/gin-gonic/gin"
 	"golang.org/x/text/language"
 )
 
 // BaseUse 基础用法
 func BaseUse(ctx context.Context) {
 
-	// 设置/获取 ctx中的目标语言
+	// 设置 ctx中的目标语言
 	ctx = SaveLg(ctx, language.English)
+	// 设置 gin ctx中的目标语言
+	SaveGinLg(&gin.Context{}, language.English)
 	// 获取ctx中的目标语言
 	_ = GetLg(ctx)
-	// 获取gin ctx中的目标语言
+	// 获取ctx中的目标语言，如果没有设置则返回默认
 	_ = GetLgWithDefault(ctx, language.English)
 
 	// 初始化翻译器和解析器

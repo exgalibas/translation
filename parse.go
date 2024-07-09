@@ -13,10 +13,12 @@ import (
 	"strings"
 )
 
+// LineParse 行模式翻译
 func LineParse(ctx context.Context, translator Translator, input ...string) ([]string, error) {
 	return translator.Translate(ctx, input...)
 }
 
+// TemplateParse 模板模式翻译
 func TemplateParse(ctx context.Context, translator Translator, input ...string) ([]string, error) {
 	if len(input) <= 0 {
 		return input, nil
@@ -43,14 +45,14 @@ func TemplateParse(ctx context.Context, translator Translator, input ...string) 
 			lastErr = err
 			continue
 		}
-		oldnew := make([]string, 0)
+		on := make([]string, 0)
 		for k, match := range matches {
-			oldnew = append(oldnew, fmt.Sprintf("@%d$", k+1), match)
+			on = append(on, fmt.Sprintf("@%d$", k+1), match)
 		}
-		if len(oldnew) <= 0 {
+		if len(on) <= 0 {
 			continue
 		}
-		input[k] = strings.NewReplacer(oldnew...).Replace(trans)
+		input[k] = strings.NewReplacer(on...).Replace(trans)
 	}
 	return input, lastErr
 }

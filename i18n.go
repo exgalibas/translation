@@ -23,7 +23,7 @@ func NewI18n(bundle *i18n.Bundle) *I18n {
 	}
 }
 
-// Local 通过该方法可以拿到标准的i18n的localizer，用户可以通过该方法进行灵活定制行为
+// Local 通过该方法可以拿到标准的i18n的localize，用户可以通过该方法进行灵活定制行为
 func (rec *I18n) Local(ctx context.Context) *i18n.Localizer {
 	lg := GetLg(ctx)
 	return i18n.NewLocalizer(rec.Bundle, lg.String())

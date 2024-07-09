@@ -11,10 +11,12 @@ import (
 	"strings"
 )
 
+// Tag 结构体解析器
 type Tag interface {
 	AnalyzeTag(string) (Parse, error)
 }
 
+// DefaultTag 默认实现的结构体解析器，也可自己实现
 type DefaultTag struct {
 	mod string
 }
@@ -28,6 +30,7 @@ const (
 var BlockErr = errors.New("tag mod block")
 var ModErr = errors.New("tag mod invalid")
 
+// AnalyzeTag 解析tag（即结构体中的annotations）
 func (tag *DefaultTag) AnalyzeTag(tagStr string) (Parse, error) {
 
 	if tag == nil || tagStr == "" {

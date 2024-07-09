@@ -10,6 +10,7 @@ import (
 	"context"
 )
 
+// Translator 翻译器接口
 type Translator interface {
 	Translate(context.Context, ...string) ([]string, error)
 	TranslateOne(context.Context, string) (string, error)

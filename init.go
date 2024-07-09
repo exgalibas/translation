@@ -17,6 +17,7 @@ import (
 var I18nAnalyzer *Analyzer
 var I18nTranslator *I18n
 
+// MustInit 使用默认的翻译器和解析器进行翻译，使用者可不使用该方法，自定义自己的翻译器和解析器
 func MustInit() {
 	cwd, err := os.Getwd()
 	if err != nil {
