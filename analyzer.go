@@ -10,8 +10,6 @@ import (
 	"context"
 	"math"
 	"reflect"
-
-	"golang.org/x/text/language"
 )
 
 type Analyzer struct {
@@ -61,10 +59,6 @@ func NewAnalyzer(translator Translator, tag Tag, ops ...Option) *Analyzer {
 }
 
 func (analyzer *Analyzer) Analyze(ctx context.Context, value any) any {
-	// 中文不进行翻译，跳过提效
-	if GetLgWithDefault(ctx, language.Chinese) == language.Chinese {
-		return value
-	}
 	sv := reflect.ValueOf(value)
 	if !sv.IsValid() {
 		return value
