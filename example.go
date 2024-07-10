@@ -74,6 +74,7 @@ func BaseUse(ctx context.Context) {
 	// 6. 结构体
 	// 结构体需要添加annotations标注需要翻译，否则不进行翻译
 	// lang:"mod=line" 或者 lang:"mod=template"
+	// 注意对于结构体嵌套，上层的annotations是可以被下层继承的，默认会进行翻译，如果需要截断翻译行为，可以使用lang:"-"来进行截断
 	// line模式会进行全文本匹配翻译，需要在译本中添加全文本和对应的翻译
 	// template模式会先进行全文本匹配翻译，如果没有匹配成功则会进行正则匹配，后面赘述
 	type InnerS struct {
